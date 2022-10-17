@@ -1,6 +1,6 @@
 # From Microsoft's Powershell official preview Docker Image for debian image
-# FROM mcr.microsoft.com/powershell:preview-debian-bullseye-slim
-FROM mcr.microsoft.com/powershell:preview-alpine-3.15
+FROM mcr.microsoft.com/powershell:preview-debian-bullseye-slim
+# FROM mcr.microsoft.com/powershell:preview-alpine-3.15
 
 # Obligatory update and install gssntlmssp
 # RUN apt update -y
