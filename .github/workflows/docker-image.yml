@@ -22,7 +22,11 @@ jobs:
       with:
         username: ${{ secrets.DOCKER_USERNAME }}
         password: ${{ secrets.DOCKER_PASSWORD }}
-        
+
+    - name: 'Generate Build Date'
+      run: |
+        echo "build_date=$( date -u +'%Y-%m-%dT%H:%M:%SZ' )" >> $GITHUB_ENV
+
     - name: Log in to the Container registry
       uses: docker/login-action@f054a8b539a109f9f41c372932f1ae047eff08c9
       with:
@@ -43,9 +47,21 @@ jobs:
           org.opencontainers.image.version=latest
 
     - name: Build and push Docker image
-      uses: docker/build-push-action@ad44023a93711e3deb337508980b4b5e9bcdc5dc
+      uses: docker/build-push-action@v3
       with:
         context: .
+        file: ./Dockerfile
         push: true
+        outputs: type=image
+        platforms: linux/amd64,linux/arm/v6,linux/arm/v7,linux/arm64
         tags: ${{ steps.meta.outputs.tags }}
-        labels: ${{ steps.meta.outputs.labels }}
+        labels: |
+          maintainer=${{ github.actor }}
+          org.opencontainers.image.created=${{ env.build_date }}
+          org.opencontainers.image.description=Windows Powershell w/ NTLM
+          org.opencontainers.image.licenses=GPL-3.0
+          org.opencontainers.image.source=https://github/${{ github.repository }}
+          org.opencontainers.image.title=Powershell-ntml
+          org.opencontainers.image.url=https://github/${{ github.repository }}
+          org.opencontainers.image.version=1.0
+
